@@ -1,0 +1,81 @@
+# Paths were files will be saved
+paths:
+  raw: ./data/raw.csv
+  primary: ./data/primary.csv
+  model_input: ./data/model_input.csv
+  model: ./model/model.cbm
+  grid_search_report: ./reports/grid_search_report.csv
+  summary_report: ./reports/summary_report.png
+  metrics_report: ./reports/metrics_report.csv
+
+# Crawler configuration
+crawler:
+  pages_to_get: 1
+  urls_to_get:
+    Brooklin: https://www.vivareal.com.br/venda/sp/sao-paulo/zona-sul/brooklin/apartamento_residencial/
+    Butanta: https://www.vivareal.com.br/venda/sp/sao-paulo/zona-oeste/butanta/apartamento_residencial/
+    # Republica: https://www.vivareal.com.br/venda/sp/sao-paulo/centro/republica/apartamento_residencial/
+    # Bras: https://www.vivareal.com.br/venda/sp/sao-paulo/zona-leste/bras/apartamento_residencial/,
+    # Freguesia do O: https://www.vivareal.com.br/venda/sp/sao-paulo/zona-norte/freguesia-do-o/apartamento_residencial/,
+    # Higienopolis: https://www.vivareal.com.br/venda/sp/sao-paulo/centro/higienopolis/apartamento_residencial/,
+    # Jardins: https://www.vivareal.com.br/venda/sp/sao-paulo/zona-oeste/jardins/apartamento_residencial/,
+    # Lapa: https://www.vivareal.com.br/venda/sp/sao-paulo/zona-oeste/lapa/apartamento_residencial/,
+    # Moema: https://www.vivareal.com.br/venda/sp/sao-paulo/zona-sul/moema/apartamento_residencial/,
+    # Mooca: https://www.vivareal.com.br/venda/sp/sao-paulo/zona-leste/mooca/apartamento_residencial/,
+    # Morumbi: https://www.vivareal.com.br/venda/sp/sao-paulo/zona-sul/morumbi/apartamento_residencial/,
+    # Pinheiros: https://www.vivareal.com.br/venda/sp/sao-paulo/zona-oeste/pinheiros/apartamento_residencial/,
+    # Santana: https://www.vivareal.com.br/venda/sp/sao-paulo/zona-norte/santana/apartamento_residencial/,
+    # Saude: https://www.vivareal.com.br/venda/sp/sao-paulo/zona-sul/saude/apartamento_residencial/,
+    # Vila Mariana: https://www.vivareal.com.br/venda/sp/sao-paulo/zona-sul/vila-mariana/apartamento_residencial/,
+    # Vila Matilde: https://www.vivareal.com.br/venda/sp/sao-paulo/zona-leste/vila-matilde/apartamento_residencial/,
+    # Campo limpo: https://www.vivareal.com.br/venda/sp/sao-paulo/zona-sul/campo-limpo/apartamento_residencial/,
+    # Tucuruvi: https://www.vivareal.com.br/venda/sp/sao-paulo/zona-norte/tucuruvi/apartamento_residencial/
+
+# Data cleaning configuration
+data_cleaning:
+  duplicates_subset:
+    [
+      id,
+      url,
+      header,
+      address,
+      area,
+      rooms,
+      bathrooms,
+      garages,
+      amenities,
+      price,
+      condo,
+    ]
+  ads_id: id
+  text_to_int: ["rooms", "bathrooms", "garages"]
+  numeric_to_int: ["area"]
+  money_to_float: ["price", "condo"]
+  datetime: ["crawled_at"]
+  str_to_normalize: ["crawler"]
+  amenities_to_dummies: ["amenities"]
+  # Min and max allowed for these fields
+  basic_cleaning:
+    rooms: [1, 5]
+    bathrooms: [1, 5]
+    garages: [0, 5]
+    condo: [100, 99999]
+  # Fields to remove outliers
+  # If removes more then threshold via IQR, passes to percentile method
+  outliers: ["price", "condo"]
+  percentiles_threshold: .035
+  drop_na: True
+
+# Model configuration
+model:
+  target: "price"
+  numerical_features: ["area", "condo", "rooms", "bathrooms", "garages"]
+  categorical_features: ["crawler"]
+  test_size: .2
+  grid_search: False
+  param_grid:
+    max_depth: [3, 5, 7]
+    n_estimators: [100, 150, 200]
+  model_params:
+    max_depth: 5
+    n_estimators: 200
