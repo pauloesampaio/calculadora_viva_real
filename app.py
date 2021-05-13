@@ -17,22 +17,22 @@ bairros = df["crawler"].unique()
 st.title("Calculadora de imóveis")
 st.subheader("Entre com as características do seu imóvel")
 
-bairro = st.selectbox(
+bairro = st.sidebar.selectbox(
     "Nome do bairro",
     options=bairros,
 )
 
-area = st.number_input(
+area = st.sidebar.number_input(
     label="Área do apto", min_value=10, max_value=500, value=70, step=25
 )
 
-condominio = st.number_input(
+condominio = st.sidebar.number_input(
     label="Valor do condomínio", min_value=100, max_value=5000, value=1000, step=100
 )
 
-quartos = st.slider(label="# quartos", min_value=1, max_value=5, value=2)
-banheiros = st.slider(label="# banheiros", min_value=1, max_value=5, value=2)
-garagens = st.slider(label="# garagens", min_value=0, max_value=5, value=2)
+quartos = st.sidebar.slider(label="# quartos", min_value=1, max_value=5, value=2)
+banheiros = st.sidebar.slider(label="# banheiros", min_value=1, max_value=5, value=2)
+garagens = st.sidebar.slider(label="# garagens", min_value=0, max_value=5, value=2)
 
 preco = model.predict([area, condominio, quartos, banheiros, garagens, bairro])
 
